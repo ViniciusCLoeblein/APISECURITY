@@ -1,0 +1,14 @@
+### API FEITA EM PYTHON, COM INTENÇÃO DE SER SEGURA ANTI ROUBO DE DADOS
+
+## Comandos e Dependencias
+
+- pip install -r requirements.txt (libs para executar o projeto)
+- uvicorn main:app --reload (utilize o comando para iniciar um servidor local)
+
+# Dependencias
+
+- Fastapi (responsavel pelas API)
+- cx_Oracle (responsavel pela conexão oracle)
+- jwt (responsavel por gerar tokens)
+- pydantic (responsavel para utilização das BaseModal)
+- uvicorn (responsavel por iniciar servidor local)

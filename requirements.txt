@@ -1,0 +1,5 @@
+Fastapi
+cx_Oracle
+jwt
+pydantic
+uvicorn
