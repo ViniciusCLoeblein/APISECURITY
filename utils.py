@@ -11,17 +11,29 @@ DB_USER = os.getenv("DB_USER")
 DB_PASSWORD = os.getenv("DB_PASSWORD")
 con = cx_Oracle.connect(f"{DB_USER}/{DB_PASSWORD}@{DB_HOST}")
 
-def upsert_token(id: int):
+def upsert_token(id: int, token: str, user: str):
     cursor = con.cursor()
     rows = cursor.execute(
             "SELECT * FROM acess_token " +
             " WHERE id_user = :id_user ",
             {"id_user": id}
         ).fetchall()
-    print(rows)
     if (len(rows) > 0):
-        return True
-    return False
+        cursor.execute(
+            "UPDATE acess_token " +
+            "SET token = :token, name_user = :name_user " +
+            "WHERE id_user = :id_user",
+            {"id_user": id, "token": token, "name_user": user}
+        )
+    else:
+        cursor.execute(
+            "INSERT INTO acess_token (id_user, token, name_user) " +
+            "VALUES (:id_user, :token, :name_user)",
+            {"id_user": id, "token": token, "name_user": user}
+        )
+    con.commit()
+    cursor.close()
+    return
 
 
 def verify_token(token: str):

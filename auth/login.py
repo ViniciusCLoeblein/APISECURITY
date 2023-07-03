@@ -37,24 +37,7 @@ def autenticar(obj: OAuth2PasswordRequestForm = Depends()):
                     "exp": datetime.datetime.utcnow() + datetime.timedelta(days=7)
                 }
                 token = jwt.encode(payload, obj.client_secret, algorithm=CLIENT_ALGORITHM)
-                user = upsert_token(row[0])
-
-                if not user:
-                    cursor.execute(
-                        "INSERT INTO acess_token (id_user, token, name_user) " +
-                        "VALUES (:id_user, :token, :name_user)",
-                        {"id_user": row[0], "token": token, "name_user": row[1]}
-                    )
-                else:
-                    cursor.execute(
-                        "UPDATE acess_token " +
-                        "SET token = :token, name_user = :name_user " +
-                        "WHERE id_user = :id_user",
-                        {"id_user": row[0], "token": token, "name_user": row[1]}
-                    )
-
-                con.commit()
-                cursor.close()
+                upsert_token(row[0], token, row[1])
 
                 response_payload = {
                     "id": row[0],
@@ -106,7 +89,6 @@ def register_user(obj: Register_user):
 def usuarios(token: Annotated[str, Depends(oauth2_scheme)]):
     try:
         user = verify_token(token)
-        print(user)
         cursor = con.cursor()
         rows = cursor.execute(
             "SELECT * FROM usuarios where id=:id",{"id": user}
