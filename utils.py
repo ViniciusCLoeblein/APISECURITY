@@ -1,6 +1,7 @@
 import cx_Oracle
 from dotenv import load_dotenv
 import os
+from fastapi import HTTPException
 
 load_dotenv()
 CLIENT_ID = os.getenv("CLIENT_ID")
@@ -34,9 +35,9 @@ def verify_token(token: str):
         access_token = r[1]
         if token == access_token:
             return r[0]
-        return False
+    raise HTTPException(status_code=401, detail="Token inválido, faça login para continuar!")
 
 def verify_client(id: int, client: str):
     if CLIENT_SECRET == client and CLIENT_ID == id:
         return True
-    return False
+    raise HTTPException(status_code=401, detail="Cliente inválido, utilize um cliente válido para prosseguir!")

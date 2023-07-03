@@ -19,9 +19,7 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="autenticar")
 @router.post("/autenticar")
 def autenticar(obj: OAuth2PasswordRequestForm = Depends()):
     try:
-        client = verify_client(obj.client_id, obj.client_secret)
-        if not client:
-            raise HTTPException(status_code=401, detail="Cliente inválido, utilize um cliente válido para prosseguir!")
+        verify_client(obj.client_id, obj.client_secret)
         cursor = con.cursor()
         cursor.execute(
             "SELECT * FROM usuarios " +
@@ -84,7 +82,6 @@ def register_user(obj: Register_user):
                        {"name": obj.name }
                        )
         verify_name = cursor.fetchone()
-        print(verify_name)
         if verify_name is None:
             cursor.execute("SELECT seq_usuario.NEXTVAL FROM DUAL")
             seq = cursor.fetchone()[0]
@@ -109,8 +106,7 @@ def register_user(obj: Register_user):
 def usuarios(token: Annotated[str, Depends(oauth2_scheme)]):
     try:
         user = verify_token(token)
-        if not user:
-            raise HTTPException(status_code=401, detail="Token inválido, faça login para continuar!")
+        print(user)
         cursor = con.cursor()
         rows = cursor.execute(
             "SELECT * FROM usuarios where id=:id",{"id": user}
