@@ -9,6 +9,10 @@
 
 - Fastapi (responsavel pelas API)
 - cx_Oracle (responsavel pela conexão oracle)
-- jwt (responsavel por gerar tokens)
+- PyJWT (responsavel por gerar tokens)
 - pydantic (responsavel para utilização das BaseModal)
 - uvicorn (responsavel por iniciar servidor local)
+- python-dotenv (responsavel pelo .env)
+- bcrypt (responsavel pelos hashed passwords)
+- python-multipart(dependecia para iniciar o uvicorn)
+- passlib(dependecia do bcrypt)
